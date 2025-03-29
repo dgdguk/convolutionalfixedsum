@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Griffin"
+  given-names: "David"
+  orcid: "https://orcid.org/0000-0002-4077-0005"
+- family-names: "Davis"
+  given-names: "Robert I."
+  orcid: "https://orcid.org/0000-0002-5772-0928"
+title: "ConvolutionalFixedSum Software"
+version: 0.0.1
+date-released: 2025-03-29
+url: "https://github.com/dgdguk/convolutionalfixedsum/"

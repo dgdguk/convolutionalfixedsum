@@ -1,0 +1,4 @@
+numpy
+cffi
+setuptools
+scipy
