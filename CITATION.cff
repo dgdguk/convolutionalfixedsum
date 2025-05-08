@@ -9,5 +9,6 @@ authors:
   orcid: "https://orcid.org/0000-0002-5772-0928"
 title: "ConvolutionalFixedSum Software"
 version: 0.0.1
+doi: 10.5281/zenodo.15107012
 date-released: 2025-03-29
 url: "https://github.com/dgdguk/convolutionalfixedsum/"
