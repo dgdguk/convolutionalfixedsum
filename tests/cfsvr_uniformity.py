@@ -37,7 +37,7 @@ def cfsvr_uniformity_test(uc, runs=1000, bins=10, tqdm_disable=False, sample_sig
     for _ in tqdm(range(runs), disable=tqdm_disable):
         while True:
             try:
-                result = cfsd(1, n_tasks, upper_constraints=uc, signal_size=sample_signal_size)
+                result = cfsd(n_tasks, 1, upper_constraints=uc, signal_size=sample_signal_size)
                 point = result.output
                 if result.rescale_triggered: unstable += 1
                 break

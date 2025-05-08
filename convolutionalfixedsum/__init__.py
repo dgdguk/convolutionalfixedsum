@@ -5,17 +5,22 @@ convolutionalfixedsum
 :copyright: David Griffin <dgdguk@gmail.com> (2024)
 :license:  BSD-3-Clause license
 
-Python module containing two implementations of the CFS algorithm, numeric (cfs) and analytical (cfsa).
+Python module containing two implementations of the CFS algorithm, numeric (cfsn) and analytical (cfsa).
 
+This algorithm was presented in the paper:
 
-
-Notes: This initial version matches the version used in the paper
 "ConvolutionalFixedSum: Uniformly Generating Random Values with a Fixed Sum Subject to Arbitrary Constraints"
-by David Griffin and Rob Davis, published at RTAS 2025. Future versions will improve upon this, for example,
-by adding full documentation.
+by David Griffin and Rob Davis, published at RTAS 2025.
 
-This version currently uses an old name, IVoRSFixedSum, which was later renamed to ConvolutionalFixedSum.
-This will be fixed in a later version.
+Future versions will improve upon this, for example, by adding better documentation.
+
+This version currently uses an old name, IVoRSFixedSum in some of the source code,
+which was later renamed to ConvolutionalFixedSum. This will be fixed in a later version.
+
+Example:
+
+    from convolutionalfixedsum import cfsn
+    cfsn(3, 1.0, upper_constraints=[0.7, 0.4, 0.1])
 """
 
 from .cfsa import cfsa as cfsa, CFSAConfig as CFSAConfig

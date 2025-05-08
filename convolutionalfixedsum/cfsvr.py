@@ -12,7 +12,7 @@ This will be fixed in a new version.
 """
 
 from dataclasses import dataclass, field
-from typing import List, Dict
+from typing import List, Dict, Optional, Sequence
 import numpy as np
 from scipy.fft import rfft, irfft, next_fast_len
 import math
@@ -180,7 +180,22 @@ class CFSResult:
     output: List[float]
 
 
-def cfsd(total, n, lower_constraints=None, upper_constraints=None, signal_size=10000, rescale_output=True, retries=1000):
+def cfsd(n, total, lower_constraints=None, upper_constraints=None, signal_size=10000, rescale_output=True, retries=1000):
+    """
+    Numerical approximation form of ConvolutionalFixedSum - Debug version. Same as cfs function, just
+    returns some of the debug info.
+    Args:
+        n: Number of constraints.
+        total: Total value to allocate. Defaults to 1.0. Probably should be positive.
+        lower_constraints: Optional sequence of length n describing lower constraints. Defaults to all 0.
+        upper_constraints: Optional sequence of length n describing upper constraints. Defaults to all total.
+        signal_size: Signal size to use in approximation. Defaults to 10000, which is reasonable to 3DP with total=1.0
+        rescale_output: Whether or not to rescale output - smoothes minor errors. Defautls to True.
+        retries: Number of retries if a problem is encountered. Defaults to 1000.
+
+    Returns:
+        A CFSResult, with lots of debug info in it.
+    """
     if lower_constraints is None:
         lower_constraints = [0] * n
     if upper_constraints is None:
@@ -238,12 +253,28 @@ def cfsd(total, n, lower_constraints=None, upper_constraints=None, signal_size=1
                         )
 
 
-def cfs(total, n, lower_constraints=None, upper_constraints=None, signal_size=1000, rescale_output=True, retries=1000):
-    return cfsd(total, n, lower_constraints, upper_constraints, signal_size, rescale_output, retries).output
+def cfs(n: int, total: float=1.0, lower_constraints: Optional[Sequence[float]]=None,
+        upper_constraints: Optional[Sequence[float]]=None, signal_size: int=10000,
+        rescale_output: bool=True, retries: int=1000):
+    """
+    Numerical approximation form of ConvolutionalFixedSum
+    Args:
+        n: Number of constraints.
+        total: Total value to allocate. Defaults to 1.0. Probably should be positive.
+        lower_constraints: Optional sequence of length n describing lower constraints. Defaults to all 0.
+        upper_constraints: Optional sequence of length n describing upper constraints. Defaults to all total.
+        signal_size: Signal size to use in approximation. Defaults to 10000, which is reasonable to 3DP with total=1.0
+        rescale_output: Whether or not to rescale output - smoothes minor errors. Defautls to True.
+        retries: Number of retries if a problem is encountered. Defaults to 1000.
+
+    Returns:
+        A vector of length n, sampling uniformly from the described area.
+    """
+    return cfsd(n, total, lower_constraints, upper_constraints, signal_size, rescale_output, retries).output
 
 
 if __name__ == '__main__':
     random.seed(0)
     uc = [1.0]* 2 + [0.1] * 4
-    r = cfsd(1.0, len(uc), upper_constraints=uc, signal_size=100000)
+    r = cfsd(len(uc), 1.0, upper_constraints=uc, signal_size=100000)
     print(r.output)

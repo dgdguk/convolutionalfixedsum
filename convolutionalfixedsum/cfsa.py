@@ -13,12 +13,20 @@ This will be fixed in a new version.
 from _cfsa import ffi, lib
 import numpy as np
 from dataclasses import dataclass, field 
-from typing import Optional, Iterable
+from typing import Optional, Iterable, Sequence
+
+class CFSAError(Exception): ...
 
 @dataclass
 class CFSAConfig:
     """
     Configuration for analytical CFS
+
+    seed / jumps: Configuration for the RNG.
+    epsilon: Accuracy with which to conduct root finding to
+    itp_params: A dictionary for ITP parameters - currently unused, reserved for future tuning
+    relative_epsilon: If the epsilon parameter should be scaled for current utilisation
+    minimum_epsilon: If using relative epsilon, a minimum value for epsilon (as FP error will happen)
     """
     seed: Optional[int] = None
     jumps: Optional[int] = None
@@ -77,11 +85,31 @@ def ivorfixedsum(n_constraints, total, lc=None, uc=None, config=None):
     ivorfs_result.ivrfs_error = lib.NO_IVORFIXEDSUM_ERROR
     ivorfs_result.itp_error = lib.NO_ITP_ERROR
     lib.ivorfixedsum(ivorfs_result, n_constraints, total, p_lc, p_uc, p_config)
-    assert ivorfs_result.ivrfs_error == lib.NO_IVORFIXEDSUM_ERROR, (ivorfs_result.ivrfs_error, ivorfs_result.itp_error)
+    if ivorfs_result.ivrfs_error != lib.NO_IVORFIXEDSUM_ERROR:
+        raise CFSAError(f'Received error code {ivorfs_result.ivrfs_error}-{ivorfs_result.itp_error}')
     return result
 
-def cfsa(total, n_constraints, lc, uc, config=None):
-    return ivorfixedsum(n_constraints, total, lc, uc, config)
+
+def cfsa(n: int, total: float=1.0, lower_constraints: Optional[Sequence[float]]=None,
+         upper_constraints: Optional[Sequence[float]]=None, config: CFSAConfig=None):
+    """
+    Analytical form of ConvolutionalFixedSum.
+
+    Note that this is a bit more rough than the numeric version at the moment. If you
+    give invalid input, it's likely to produce an impenetrable exception. This will be
+    improved in future versions.
+
+    Args:
+        n: Number of constraints.
+        total: Total value to allocate. Defaults to 1.0. Probably should be positive.
+        lower_constraints: Optional sequence of length n describing lower constraints. Defaults to all 0.
+        upper_constraints: Optional sequence of length n describing upper constraints. Defaults to all total.
+        config: Optional CFSA object describing configuration - including random seeds.
+
+    Returns:
+        A vector of length n, sampling uniformly from the described area.
+    """
+    return ivorfixedsum(n, total, lower_constraints, upper_constraints, config)
 
 
 @dataclass
