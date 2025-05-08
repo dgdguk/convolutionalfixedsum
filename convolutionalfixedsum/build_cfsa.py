@@ -1,5 +1,9 @@
 import sys
 from cffi import FFI
+import pathlib
+
+script_base = pathlib.Path(__file__)
+analytical_base = script_base.parent / "analytical"
 
 WITH_IVORFS_ICDF_FUNCTIONS = True
 
@@ -132,15 +136,20 @@ src = """
 #include <stdbool.h>
 """ + cdef
 
+current_path = ''
 
 sources = [
-    "analytical/itp.c",
-    "analytical/fsum.c",
-    "analytical/pluggable_rand.c",
-    "analytical/xoroshiro256sp.c",
-    "analytical/ivrfs_vc.c",
-    "analytical/ivorfixedsum.c"
+    analytical_base / "itp.c",
+    analytical_base / "fsum.c",
+    analytical_base / "pluggable_rand.c",
+    analytical_base / "xoroshiro256sp.c",
+    analytical_base / "ivrfs_vc.c",
+    analytical_base / "ivorfixedsum.c"
 ]
+
+for source in sources:
+    if not source.is_file():
+        raise SystemError(f'Source code file {source} not found!')
 
 if sys.platform == 'win32':
     libraries = []
@@ -152,7 +161,8 @@ else:
     libraries = ['m']
 
 ffibuilder = FFI()
-ffibuilder.set_source("_cfsa", src, sources=sources, libraries=libraries)
+ffibuilder.set_source("_cfsa", src, sources=[str(x) for x in sources], libraries=libraries, include_dirs=[str(analytical_base)])
 ffibuilder.cdef(cdef)
 
-ffibuilder.compile(verbose=True)
+if __name__ == '__main__':
+    ffibuilder.compile(verbose=True)

@@ -16,7 +16,10 @@ from dataclasses import dataclass, field
 from typing import Optional, Iterable
 
 @dataclass
-class IVoRFixedSum_Config:
+class CFSAConfig:
+    """
+    Configuration for analytical CFS
+    """
     seed: Optional[int] = None
     jumps: Optional[int] = None
     epsilon: Optional[float] = 1e-10
@@ -93,7 +96,7 @@ class CFSADistribution:
     uc: Optional[Iterable[float]] = None
 
     def __post_init__(self):
-        self.conf = IVoRFixedSum_Config()
+        self.conf = CFSAConfig()
         self.ivorfs_vc = ffi.new("IVoRFS_VC*")
         lib.IVoRFixedSum_init(self.ivorfs_vc, self.n_constraints)
         if self.lc:

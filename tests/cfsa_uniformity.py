@@ -6,7 +6,7 @@ cfsa_uniformity
 :license:  BSD-3-Clause license
 """
 
-from convolutionalfixedsum.cfsa import IVoRFixedSum_Config, ivorfixedsum
+from convolutionalfixedsum.cfsa import CFSAConfig, ivorfixedsum
 from .util import mk_bins_by_dimension, chisquare_stat, categorise_point, UUniFastDiscard
 import time
 import random
@@ -16,7 +16,7 @@ import pickle
 
 def cfsa_uniformity_test(uc, runs=10000, bins=10, seed=1, jumps=0):
     n_tasks= len(uc)
-    conf = IVoRFixedSum_Config(seed=seed, jumps=jumps)
+    conf = CFSAConfig(seed=seed, jumps=jumps)
     dist_by_dimension = {}
     try:
         bins_by_dimension = mk_bins_by_dimension(n_tasks, uc, 10, 'analytical')

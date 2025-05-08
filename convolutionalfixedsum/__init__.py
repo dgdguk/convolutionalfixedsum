@@ -18,5 +18,7 @@ This version currently uses an old name, IVoRSFixedSum, which was later renamed 
 This will be fixed in a later version.
 """
 
-from .cfsa import cfsa
-from .cfsvr import cfs, cfsd
+from .cfsa import cfsa as cfsa, CFSAConfig as CFSAConfig
+from .cfsvr import cfs as cfsn, cfsd as cfs_debug
+
+

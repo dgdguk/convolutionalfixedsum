@@ -12,7 +12,7 @@ import time
 import pickle
 from tqdm import tqdm
 from .util import UUniFastDiscard
-from convolutionalfixedsum.cfsa import ivorfixedsum, IVoRFixedSum_Config
+from convolutionalfixedsum.cfsa import ivorfixedsum, CFSAConfig
 from drs import drs
 import numpy as np
 
@@ -39,7 +39,7 @@ def drs_time_experiments(outfn, n_exps, seed_offset, repeats=3):
 
 
 def cfsa_timer(n_tasks, seed, repeats=3):
-    conf = IVoRFixedSum_Config(seed=seed)
+    conf = CFSAConfig(seed=seed)
     random.seed(seed)
     uc = UUniFastDiscard(n_tasks, 1.5)
     r = []

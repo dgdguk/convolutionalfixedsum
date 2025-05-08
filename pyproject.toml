@@ -1,0 +1,29 @@
+[project]
+name = "convolutionalfixedsum"
+version = "1.0"
+authors = [
+  { name="David Griffin", email="dgdguk@gmail.com" },
+]
+description = "Algorithm to generate uniformly sampled random vectors which sum to a given value, with constraints on each variate"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+dependencies = [
+    "numpy>=2.2.5",
+    "scipy>=1.15",
+    "cffi>=1.17",
+]
+
+[project.urls]
+Homepage = "https://github.com/dgdguk/convolutionalfixedsum"
+Issues = "https://github.com/dgdguk/convolutionalfixedsum/issues"
+
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
