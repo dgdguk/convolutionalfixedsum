@@ -27,5 +27,8 @@ Issues = "https://github.com/dgdguk/convolutionalfixedsum/issues"
 requires = ["setuptools >= 77.0.3"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+packages = ['convolutionalfixedsum']
+
 [tool.cibuildwheel]
 build-frontend = "build"
