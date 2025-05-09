@@ -34,7 +34,7 @@ cfsn(3, upper_constraints=[1.0, 0.5, 0.1])
 # Same as before, but the middle value can not be lower than 0.3
 cfsn(3, lower_constraints=[0.0, 0.3, 0.0], upper_constraints=[1.0, 0.5, 0.1])
 
-# cfsa has basically the same singature for most uses
+# cfsa has basically the same function signature for most uses
 cfsa(3, lower_constraints=[0.0, 0.3, 0.0], upper_constraints=[1.0, 0.5, 0.1])
 ```
 Citation
