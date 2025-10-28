@@ -196,6 +196,12 @@ def cfsd(n, total, lower_constraints=None, upper_constraints=None, signal_size=1
     Returns:
         A CFSResult, with lots of debug info in it.
     """
+
+    ## WORKAROUND: Numpy arrays break something in CFS. This works around the problem.
+    # A better workaround would likely be to ensure these *are* np arrays, and fix the issue.
+    if isinstance(lower_constraints, np.ndarray): lower_constraints = lower_constraints.tolist()
+    if isinstance(upper_constraints, np.ndarray): upper_constraints = upper_constraints.tolist()
+
     if lower_constraints is None:
         lower_constraints = [0] * n
     if upper_constraints is None:
@@ -205,16 +211,12 @@ def cfsd(n, total, lower_constraints=None, upper_constraints=None, signal_size=1
         raise ValueError(f"Sum of lower constraints ({sum(lower_constraints)}) >= total utilisation {total}")
     if sum(upper_constraints) <= total:
         raise ValueError(f"Sum of upper constraints ({sum(upper_constraints)}) <= total utilisation {total}")
-    if any(x < 0 for x in lower_constraints):
-        raise ValueError(f"Lower constraint < 0")
-    if any(x < 0 for x in upper_constraints):
-        raise ValueError(f"Upper constraint < 0")
     if len(lower_constraints) != n:
         raise ValueError(f"Lower constraints should be of length {n} ({len(lower_constraints)} supplied)")
     if len(upper_constraints) != n:
         raise ValueError(f"Upper constraints should be of length {n} ({len(upper_constraints)} supplied)")
 
-    # Perform normalisation by setting all lower constraints to 1
+    # Perform normalisation by setting all lower constraints to 0
     normalised_upper_constraints = [upper_constraints[x] - lower_constraints[x] for x in range(n)]
     total_remaining = modified_total = -math.fsum([-total] + lower_constraints)
 
@@ -222,7 +224,7 @@ def cfsd(n, total, lower_constraints=None, upper_constraints=None, signal_size=1
     sorted_uc, indexes = zip(*sorted(([uc, x] for x, uc in enumerate(normalised_upper_constraints)), reverse=True))
     for retries_used in range(retries):
         # __cfs's approximation is slightly above the valid region. So we try until we get a valid point.
-        output  = __cfs(total, total_remaining, n, sorted_uc, signal_size)
+        output  = __cfs(modified_total, total_remaining, n, sorted_uc, signal_size)
         alloc_total = math.fsum(output)
         rescale_triggered = rescale_output and abs(alloc_total - modified_total) > 1e-4
         # Rescale minor infractions of the total back into the valid region - useful to counter floating point errors
