@@ -25,5 +25,6 @@ Example:
 
 from .cfsa import cfsa as cfsa, CFSAConfig as CFSAConfig
 from .cfsvr import cfs as cfsn, cfsd as cfs_debug
+from .dcfs import dcfsa as dcfsa, dcfsn as dcfsn, enumeration_sampling as enumeration_sampling
 
 
