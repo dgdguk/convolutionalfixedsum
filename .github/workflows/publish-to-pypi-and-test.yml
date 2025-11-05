@@ -8,9 +8,10 @@ jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
-        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, macos-13, macos-latest]
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, macos-15, macos-latest]
 
     steps:
       - uses: actions/checkout@v4
@@ -42,11 +43,16 @@ jobs:
       url: https://pypi.org/p/convolutionalfixedsum
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, ubuntu-24.04-arm, windows-latest, macos-15, macos-latest ]
+
     steps:
         - name: Download all the dists
           uses: actions/download-artifact@v4
           with:
-            name: python-package-distributions
+            name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
             path: dist/
         - name: Publish distribution to PyPI
           uses: pypa/gh-action-pypi-publish@release/v1
@@ -64,11 +70,15 @@ jobs:
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest, macos-15, macos-latest]
+
     steps:
       - name: Download all the dists
         uses: actions/download-artifact@v4
         with:
-          name: python-package-distributions
+          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
           path: dist/
       - name: Publish distribution to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
