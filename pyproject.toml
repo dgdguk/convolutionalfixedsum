@@ -1,6 +1,6 @@
 [project]
 name = "convolutionalfixedsum"
-version = "1.0"
+version = "2.0"
 authors = [
   { name="David Griffin", email="dgdguk@gmail.com" },
 ]
