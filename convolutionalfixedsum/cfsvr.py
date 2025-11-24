@@ -215,6 +215,12 @@ def cfsd(n, total, lower_constraints=None, upper_constraints=None, signal_size=1
         raise ValueError(f"Lower constraints should be of length {n} ({len(lower_constraints)} supplied)")
     if len(upper_constraints) != n:
         raise ValueError(f"Upper constraints should be of length {n} ({len(upper_constraints)} supplied)")
+    
+    # FIX: Simply return the total if n == 1
+    if n == 1:
+        return CFSResult(total, n, lower_constraints, upper_constraints, signal_size, rescale_output,
+                         False, retries, 0, [total]
+                        )
 
     # Perform normalisation by setting all lower constraints to 0
     normalised_upper_constraints = [upper_constraints[x] - lower_constraints[x] for x in range(n)]

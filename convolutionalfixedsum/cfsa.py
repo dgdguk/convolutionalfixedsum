@@ -109,6 +109,23 @@ def cfsa(n: int, total: float=1.0, lower_constraints: Optional[Sequence[float]]=
     Returns:
         A vector of length n, sampling uniformly from the described area.
     """
+    # FIX: Simply return the total if n == 1
+    if n == 1:
+        if lower_constraints is None:
+            lower_constraints = [0] * n
+        if upper_constraints is None:
+            upper_constraints = [total] * n
+        # Do some checks
+        if sum(lower_constraints) >= total:
+            raise ValueError(f"Sum of lower constraints ({sum(lower_constraints)}) >= total utilisation {total}")
+        if sum(upper_constraints) <= total:
+            raise ValueError(f"Sum of upper constraints ({sum(upper_constraints)}) <= total utilisation {total}")
+        if len(lower_constraints) != n:
+            raise ValueError(f"Lower constraints should be of length {n} ({len(lower_constraints)} supplied)")
+        if len(upper_constraints) != n:
+            raise ValueError(f"Upper constraints should be of length {n} ({len(upper_constraints)} supplied)")
+        return [total]
+    
     return ivorfixedsum(n, total, lower_constraints, upper_constraints, config)
 
 
