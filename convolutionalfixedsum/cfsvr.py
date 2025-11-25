@@ -226,6 +226,15 @@ def cfsd(n, total, lower_constraints=None, upper_constraints=None, signal_size=1
     normalised_upper_constraints = [upper_constraints[x] - lower_constraints[x] for x in range(n)]
     total_remaining = modified_total = -math.fsum([-total] + lower_constraints)
 
+    # Raise an error if any of the upper constraints were smaller than the lower constraints
+    for normalised_upper_constraint in normalised_upper_constraints:
+        if normalised_upper_constraint < 0:
+            raise ValueError(f"Upper constraints should be larger than lower constraints")
+    # Quick Fix: Return if total_remaining still equals 0, which means upper is the same as lower constraint
+    if total_remaining == 0:
+        return CFSResult(total, n, lower_constraints, upper_constraints, signal_size, rescale_output,
+                         False, retries, 0, lower_constraints)
+
     # Sort the upper constraints from low to high and make a map back
     sorted_uc, indexes = zip(*sorted(([uc, x] for x, uc in enumerate(normalised_upper_constraints)), reverse=True))
     for retries_used in range(retries):
