@@ -17,7 +17,6 @@ to copy header files across to the build environment. So this also has a workaro
 from setuptools import setup
 
 setup(
-    package_data={"": ["*.h"]},
     setup_requires=["cffi>=1.0.0"],
     cffi_modules=["convolutionalfixedsum/build_cfsa.py:ffibuilder"],
     install_requires=["cffi>=1.0.0"]
